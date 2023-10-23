@@ -1,2 +1,2 @@
 # signature_transform_2023
-This is code is based on the code github.com/patrick-kidger/Deep-Signature-Transforms for the paper Deep Signature Transforms by Bonnier, Kidger, Perez Arribas, Salvi, Lyons 2019.
+This code is based on the code (github.com/patrick-kidger/Deep-Signature-Transforms) for the paper Deep Signature Transforms by Bonnier, Kidger, Perez Arribas, Salvi, Lyons 2019.
