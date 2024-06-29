@@ -1,5 +1,5 @@
 This is a documentation file for the code. 
-The `data` folder contains both the market data and simulated data that are used in experiments. The program `path.py` in `data` folder is used to generate rough volatility processes.
+The `data` folder contains the market data that are used in experiments. The program `path.py` in `data` folder is used to generate rough volatility processes.
 
 The `numerical_example1` folder contains the program of sensitivity analysis with respect to strides (Corresponding to `section 4.1.2` of the paper). 
 The `numerical_example2` folder contains the program of sensitivity analysis with respect to signature truncation order (Corresponding to `section 4.1.3` of the paper). 
