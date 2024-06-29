@@ -8,5 +8,5 @@ The `numerical_example4` folder contains the program of calibrating the Hurst pa
 The `numerical_example5` folder contains the program of multiple calibration problems (Corresponding to `section 4.3` of the paper).
 The `numerical_example6` folder contains the program of empirical studies (Corresponding to `section 4.4` of the paper).
 
-We provide the results in folder `results` for every examples.
+We provide the results in folder `data/results` for every examples.
  
