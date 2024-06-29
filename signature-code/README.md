@@ -6,7 +6,7 @@ The `numerical_example2` folder contains the program of sensitivity analysis wit
 The `numerical_example3` folder contains the program of exploring the effective of CNN and MLP in the SigFormer model (Corresponding to `section 4.1.4` of the paper). 
 The `numerical_example4` folder contains the program of calibrating the Hurst parameter from rough volatility paths with different lengths (Corresponding to `section 4.2` of the paper).
 The `numerical_example5` folder contains the program of multiple calibration problems (Corresponding to `section 4.3` of the paper).
-The `empirical_example6` folder contains the program of empirical studies (Corresponding to `section 4.4` of the paper).
+The `numerical_example6` folder contains the program of empirical studies (Corresponding to `section 4.4` of the paper).
 
 We provide the results in folder `results` for every examples.
  
