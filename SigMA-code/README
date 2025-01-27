@@ -6,7 +6,8 @@ The `numerical_example2` folder contains the program of sensitivity analysis wit
 The `numerical_example3` folder contains the program of exploring the effective of Convolutional layer and MLP in the SigMA model (Corresponding to `section 4.1.4` of the paper). 
 The `numerical_example4` folder contains the program of calibrating the Hurst parameter from rough volatility paths with different lengths (Corresponding to `section 4.2` of the paper).
 The `numerical_example5` folder contains the program of multiple calibration problems (Corresponding to `section 4.3` of the paper).
-The `numerical_example6` folder contains the program of empirical studies (Corresponding to `section 4.4` of the paper).
+The `numerical_example6` folder contains the program of an application to calibrate stock market indices (Corresponding to `section 4.4.1` of the paper).
+The `numerical_example7` folder contains the program of an application to Li-ion battery degradation (Corresponding to `section 4.4.2` of the paper).
 
 For each different example, the 'layers.py' and 'models.py' files in the folder are used to establish the network.
 The 'utilis.py' is used as an auxiliary file to define trainers or calculate network complexity, etc. 
