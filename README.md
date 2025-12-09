@@ -1,5 +1,6 @@
 # SigMA
-This code is for the paper "SigMA: Path Signatures and Multi-head Attention for Learning Parameters in fBm-driven SDEs" by Chiheb Ben Hammouda, Kees Oosterlee, and Xianglin Wu. 
+This work implements "SigMA: Path Signatures and Multi-head Attention for Learning Parameters in fBm-driven SDEs" by Xianglin Wu, Cornelis W. Oosterlee, and Chiheb Ben Hammouda. 
+It adapts some codes from the repository (github.com/patrick-kidger/Deep-Signature-Transforms) for the paper Deep Signature Transforms by Bonnier, Kidger, Perez Arribas, Salvi, Lyons 2019.
 
 ## 🚀 Prerequisites
 All experiments were run on a system with CUDA12.8, utilizing GPU acceleration. The specific versions of the key libraries were: PyTorch2.8.0, Python3.10.12. 
