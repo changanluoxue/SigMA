@@ -21,8 +21,8 @@ def generate_torch_batched_data(x_train, y_train, x_test, y_test, train_batch_si
         - shuffle: set to True to have the data reshuffled at every epoch (default: False).
         - num_workers: how many subprocesses to use for data loading (default: 0).
     '''
-    # 'TensorDataset' 将输入数据和目标数据组合成一个数据集对象
-    # 'Dataloader' 用于创建数据加载器， 在迭代训练时按批次提供数据
+    # 'TensorDataset' combines input data and target data into a dataset
+    # 'DataLoader' is used to create a data loader, providing data in batches during iterative training
     train_dataset = torchdata.TensorDataset(torch.tensor(x_train, dtype=torch.float).to(device),
                                             torch.tensor(y_train, dtype=torch.float).to(device))
     train_dataloader = torchdata.DataLoader(train_dataset, batch_size=train_batch_size,
@@ -31,7 +31,7 @@ def generate_torch_batched_data(x_train, y_train, x_test, y_test, train_batch_si
                                            torch.tensor(y_test, dtype=torch.float).to(device))
     test_dataloader = torchdata.DataLoader(test_dataset, batch_size=test_batch_size,
                                            shuffle=shuffle, num_workers=num_workers)
-    # 用于初始化模型
+    # initialize the model
     example_batch_x, example_batch_y = next(iter(train_dataloader))
     if x_valid is not None and y_valid is not None:
         valid_dataset = torchdata.TensorDataset(torch.tensor(x_valid, dtype=torch.float).to(device),
@@ -54,19 +54,19 @@ def create_model_supervised_trainer(lr, optimizer_fn, loss_fn, max_epochs,
         # prediction
         prediction = model(input_data)
     Args:
-        - loss_fn: 可自定的损失函数，不用于训练。
+        - loss_fn: Customizable loss function
     '''
 
     def mse_loss_function(y_pre,y):
         '''
-        默认使用MSE作为训练的损失函数。
+        Default to using MSE as the training loss function.
         '''
         return F.mse_loss(y_pre,y)
     def train_model(model, model_name, history, device=device):
-        model(example_batch_x)# 初始化模型
+        model(example_batch_x)# Initialize the model
         optimizer = optimizer_fn(model.parameters(), lr=lr)
         history[model_name] = {'train_loss': [], 'train_mse': [], 'eval_loss': [], 'eval_mse': []}
-        # 定义训练器和评估器
+        # Define the trainer and evaluator
         trainer = engine.create_supervised_trainer(model, optimizer, mse_loss_function, device=device)
         evaluator = engine.create_supervised_evaluator(model, device=device, metrics={'loss': ignite_metrics.Loss(loss_fn),
                                                                                       'mse': ignite_metrics.MeanSquaredError()})
