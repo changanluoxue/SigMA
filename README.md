@@ -1,6 +1,6 @@
 # SigMA
 This work implements "SigMA: Path Signatures and Multi-head Attention for Learning Parameters in fBm-driven SDEs" by Xianglin Wu, Chiheb Ben Hammouda, and Cornelis W. Oosterlee. 
-https://arxiv.org/abs/2512.15088
+[https://arxiv.org/abs/2512.15088]
 
 ## 🚀 Prerequisites
 All experiments were run on a system with CUDA12.8, utilizing GPU acceleration. The specific versions of the key libraries were: PyTorch2.8.0, Python3.10.12. 
