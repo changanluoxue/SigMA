@@ -15,7 +15,7 @@ import NNmodels
 __name__ = "__example2__" # "__example2__", "__example4__", "__example5__"
 
 if __name__ == '__example2__':
-    '''输入误差数据'''
+    '''Input error data'''
     fBm_100 = np.array([[9.52e-2, 1.72e-2, 1.34e-2],
                         [1.18e-1, 1.15e-2, 1.06e-2],
                         [2.85e-1, 1.32e-1, 1.09e-1]])
@@ -38,9 +38,9 @@ if __name__ == '__example2__':
     truncation_order = ['1', '3', '5']
     v_model_dict = {'fBm_100': fBm_100, 'fOU_100': fOU_100, 'rHeston_100': rHeston_100,
                     'fBm_500': fBm_500, 'fOU_500': fOU_500, 'rHeston_500': rHeston_500}
-    '''选择随机过程'''
+    '''Select stochastic process'''
     v_model = 'fBm_100'  # 'fBm_100', 'fOU_100', 'rHeston_100', 'fBm_500', 'fOU_500', 'rHeston_500'
-    '''绘制误差折线图'''
+    '''Plot error line chart'''
     plt.figure(figsize=(10, 10))
     colors = ['blue', 'orange', 'red']
     markers = ['o', 's', '^']
@@ -53,7 +53,7 @@ if __name__ == '__example2__':
     plt.xlabel('Truncation order', fontsize=20, fontweight='bold')
     plt.ylabel('Test RMSE', fontsize=20, fontweight='bold')
     legend = plt.legend(mode='expand', bbox_to_anchor=(0, 1, 1, 0), ncol=3, prop={'size': 20})
-    '标注SigMA'
+    'Highlight SigMA'
     for text in legend.get_texts():
         if text.get_text() == 'SigMA':
             text.set_fontweight('bold')
@@ -63,7 +63,7 @@ if __name__ == '__example2__':
     plt.show()
 
 if __name__ == "__example4__":
-    '''输入误差数据'''
+    '''Import error data'''
     fBm = np.array([[1.90e-2, 4.68e-2, 7.75e-2, 8.94e-2],
                     [1.05e-1, 1.07e-1, 1.12e-1, 1.10e-1],
                     [7.70e-2, 5.35e-2, 3.83e-2, 3.89e-2],
@@ -82,9 +82,9 @@ if __name__ == "__example4__":
     nn_models = ['Transformer', 'CNN', 'LSTM', 'SigMA', 'DeepSigNet']
     input_lengths = ['100', '500', '1000', '1500']
     v_model_dict = {'fBm': fBm, 'fOU': fOU, 'rHeston': rHeston}
-    '''选择随机过程'''
+    '''Select stochastic process'''
     v_model = 'rHeston' # 'fBm', 'fOU', 'rHeston'
-    '''绘制误差折线图'''
+    '''Plot error line chart'''
     plt.figure(figsize=(10, 10))
     colors = ['blue', 'red', 'green', 'orange', 'purple']
     markers = ['o', 's', '^', 'D', 'v']
@@ -97,7 +97,7 @@ if __name__ == "__example4__":
     plt.xlabel('Input Length', fontsize=20, fontweight='bold')
     plt.ylabel('Test RMSE', fontsize=20, fontweight='bold')
     legend = plt.legend(mode='expand', bbox_to_anchor=(0, 1, 1, 0), ncol=3, prop={'size': 20})
-    '标注SigMA'
+    'Highlight SigMA'
     for text in legend.get_texts():
         if text.get_text() == 'SigMA':
             text.set_fontweight('bold')
@@ -107,9 +107,9 @@ if __name__ == "__example4__":
     plt.show()
 
 if __name__ == '__example5__':
-    '''选择随机过程'''
+    '''Select stochastic process'''
     v_model = 'rHeston'  # 'fOU', 'rHeston'
-    '''导入误差数据'''
+    '''Input error data'''
     errors_average_rse = {'Transformer': [], 'SigMA': [], 'Deepsignet': [], 'CNN': [], 'LSTM': []}
     errors_average_rmse = {'Transformer': [], 'SigMA': [], 'Deepsignet': [], 'CNN': [], 'LSTM': []}
     for round in range(10):
@@ -120,12 +120,12 @@ if __name__ == '__example5__':
             errors_average_rse[nn_model_name].append(error_average_rse)
             errors_average_rmse[nn_model_name].append(error_average_rmse)
 
-    '打印10轮平均Average RMSE'
+    'Print the 10-round mean of Average RMSE'
     print(f'{v_model}_Average_RMSE_average:--------------')
     for nn_model_name in errors_average_rmse:
         print(f"{nn_model_name:15}: {np.mean(errors_average_rmse[nn_model_name]):7.3f}")
 
-    '打印并绘制10轮Average RSE的分布情况'
+    'Print and plot the distribution of 10-round Average RSE'
     print(f'{v_model}_Average_RSE:--------------')
     colors = {'Transformer': 'blue', 'SigMA': 'orange', 'Deepsignet': 'purple', 'CNN': 'red', 'LSTM': 'green'}
     lines = {'Transformer': '--', 'SigMA': '-', 'Deepsignet': '-.', 'CNN': ':', 'LSTM': (0, (3, 2, 1, 2, 1, 2))}
@@ -143,7 +143,7 @@ if __name__ == '__example5__':
     plt.xlabel('Average RSE', fontsize=20, fontweight='bold')
     plt.ylabel('Probability density', fontsize=20, fontweight='bold')
     legend = plt.legend(loc='best', prop={'size': 20})
-    '标注SigMA'
+    'Highlight SigMA'
     for text in legend.get_texts():
         if text.get_text() == 'SigMA':
             text.set_fontweight('bold')
