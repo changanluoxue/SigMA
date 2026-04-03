@@ -16,7 +16,7 @@ def fBm_paths(grid_points, M, H, T):
     return:
     np.array((M, grid_points))
     """
-    assert 0 < H < 1.0 # 判断H的区间是否合理
+    assert 0 < H < 1.0 # Check if the interval of H is valid
     'Step1: create partition'
     X = np.linspace(0, 1, num=grid_points)
     X = X[1:grid_points]# get rid of starting point
@@ -48,10 +48,10 @@ def fOU_paths(grid_points, M, H, T, alpha, mu, sigma, V_0):
     assert V_0 > 0
     V = np.zeros((M, grid_points))
     dt = T/(grid_points-1)
-    # 生成分数阶布朗运动增量
+    # Generate fractional Brownian motion increments
     fBms = fBm_paths(grid_points, M, H, T)
     dWH = np.diff(fBms, axis=1) #(M, grid_points-1)
-    # 生成波动率过程
+    # Generate volatility process
     V[:, 0] = V_0
     for i in range(1, grid_points):
         V[:, i] = V[:, i-1] - alpha*(mu - V[:, i-1])*dt + sigma*dWH[:, i-1]
@@ -142,14 +142,14 @@ def generate_fBm_paths_single(n_paths_train, n_paths_eval, grid_points, Hs, T):
         for i in range(n_paths):
             Y[i, 0] = random.choice(Hs)
             X[i, :] = fBm_paths(grid_points, M=1, H=Y[i, 0], T=T)
-            print(f'已生成第 {i+1} 条路径...')
+            print(f'Generated path {i+1} ...')
         return X, Y
-    print('******开始生成训练集******')
+    print('******Starting training set generation******')
     X_train, Y_train = generate_fBm_single(n_paths_train, grid_points, Hs)
-    print('******训练集生成完毕******')
-    print('******开始生成验证集******')
+    print('******Training set generation complete******')
+    print('******Starting validation set generation******')
     X_test, Y_test = generate_fBm_single(n_paths_eval, grid_points, Hs)
-    print('******验证集生成完毕******')
+    print('******Validation set generation complete******')
     return X_train, Y_train, X_test, Y_test
 def generate_fOU_paths_single(n_paths_train, n_paths_eval, grid_points, Hs, T, alpha, mu, sigma, V_0):
     def generate_fOU_single(n_paths, grid_points, Hs, alpha, mu, sigma):
@@ -157,14 +157,14 @@ def generate_fOU_paths_single(n_paths_train, n_paths_eval, grid_points, Hs, T, a
         for i in range(n_paths):
             Y[i, 0] = random.choice(Hs)
             X[i, :] = fOU_paths(grid_points, M=1, H=Y[i, 0], T=T, alpha=alpha, mu=mu, sigma=sigma, V_0=V_0)
-            print(f'已生成第 {i+1} 条路径...')
+            print(f'Generated path {i+1} ...')
         return X, Y
-    print('******开始生成训练集******')
+    print('******Starting training set generation******')
     X_train, Y_train = generate_fOU_single(n_paths_train, grid_points, Hs, alpha, mu, sigma)
-    print('******训练集生成完毕******')
-    print('******开始生成验证集******')
+    print('******Training set generation complete******')
+    print('******Starting validation set generation******')
     X_test, Y_test = generate_fOU_single(n_paths_eval, grid_points, Hs, alpha, mu, sigma)
-    print('******验证集生成完毕******')
+    print('******Validation set generation complete******')
     return X_train, Y_train, X_test, Y_test
 def generate_fOU_paths_multiple(n_paths_train, n_paths_eval, grid_points, Hs, T, alphas, mus, sigmas, V_0):
     def generate_fOU_multiple(n_paths, grid_points, Hs, alphas, mus, sigmas):
@@ -173,14 +173,14 @@ def generate_fOU_paths_multiple(n_paths_train, n_paths_eval, grid_points, Hs, T,
             Y[i, 0] = random.choice(Hs); Y[i, 1] = random.choice(alphas);
             Y[i, 2] = random.choice(mus); Y[i, 3] = random.choice(sigmas)
             X[i, :] = fOU_paths(grid_points, M=1, H=Y[i, 0], T=T, alpha=Y[i, 1], mu=Y[i, 2], sigma=Y[i, 3], V_0=V_0)
-            print(f'已生成第 {i+1} 条路径...')
+            print(f'Generated path {i+1} ...')
         return X, Y
-    print('******开始生成训练集******')
+    print('******Starting training set generation******')
     X_train, Y_train = generate_fOU_multiple(n_paths_train, grid_points, Hs, alphas, mus, sigmas)
-    print('******训练集生成完毕******')
-    print('******开始生成验证集******')
+    print('******Training set generation complete******')
+    print('******Starting validation set generation******')
     X_test, Y_test = generate_fOU_multiple(n_paths_eval, grid_points, Hs, alphas, mus, sigmas)
-    print('******验证集生成完毕******')
+    print('******Validation set generation complete******')
     return X_train, Y_train, X_test, Y_test
 def generate_rHeston_paths_single(n_paths_train, n_paths_eval, grid_points, T, V_0, reps, Hs, kappa1, kappa2, theta):
     def generate_rHeston_single(n_paths, grid_points, Hs, kappa1, kappa2, theta):
@@ -188,14 +188,14 @@ def generate_rHeston_paths_single(n_paths_train, n_paths_eval, grid_points, T, V
         for i in range(n_paths):
             Y[i, 0] = random.choice(Hs)
             X[i, :] = rHeston_paths(grid_points, M=1, H=Y[i, 0], T=T, kappa_1=kappa1, kappa_2=kappa2, theta=theta, V_0=V_0, reps=reps)
-            print(f'已生成第 {i + 1} 条路径...')
+            print(f'Generated path {i + 1} ...')
         return X, Y
-    print('******开始生成训练集******')
+    print('******Starting training set generation******')
     X_train, Y_train = generate_rHeston_single(n_paths_train, grid_points, Hs, kappa1, kappa2, theta)
-    print('******训练集生成完毕******')
-    print('******开始生成验证集******')
+    print('******Training set generation complete******')
+    print('******Starting validation set generation******')
     X_test, Y_test = generate_rHeston_single(n_paths_eval, grid_points, Hs, kappa1, kappa2, theta)
-    print('******验证集生成完毕******')
+    print('******Validation set generation complete******')
     return X_train, Y_train, X_test, Y_test
 def generate_rHeston_paths_multiple(n_paths_train, n_paths_eval, grid_points, T, V_0, reps, Hs, kappa1s, kappa2s, thetas):
     def generate_rHeston_multiple(n_paths, grid_points, Hs, kappa1s, kappa2s, thetas):
@@ -204,14 +204,14 @@ def generate_rHeston_paths_multiple(n_paths_train, n_paths_eval, grid_points, T,
             Y[i, 0] = random.choice(Hs); Y[i, 1] = random.choice(kappa1s);
             Y[i, 2] = random.choice(thetas); Y[i, 3] = random.choice(kappa2s)
             X[i, :] = rHeston_paths(grid_points, M=1, H=Y[i, 0], T=T, kappa_1=Y[i, 1], kappa_2=Y[i, 2], theta=Y[i, 3], V_0=V_0, reps=reps)
-            print(f'已生成第 {i + 1} 条路径...')
+            print(f'Generated path {i + 1} ...')
         return X, Y
-    print('******开始生成训练集******')
+    print('******Starting training set generation******')
     X_train, Y_train = generate_rHeston_multiple(n_paths_train, grid_points, Hs, kappa1s, kappa2s, thetas)
-    print('******训练集生成完毕******')
-    print('******开始生成验证集******')
+    print('******Training set generation complete******')
+    print('******Starting validation set generation******')
     X_test, Y_test = generate_rHeston_multiple(n_paths_eval, grid_points, Hs, kappa1s, kappa2s, thetas)
-    print('******验证集生成完毕******')
+    print('******Validation set generation complete******')
     return X_train, Y_train, X_test, Y_test
 
 types = 'single' # 'single', 'multiple'
