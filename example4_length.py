@@ -11,7 +11,7 @@ import torch.optim as optim
 import utils
 import NNmodels
 
-'''自定义损失函数'''
+'''Custom loss function'''
 def rmse_loss_fn(y_pre, y):
     return torch.sqrt(F.mse_loss(y_pre, y))
 
@@ -19,7 +19,7 @@ __name__ = "__results__" # "__training__", "__results__"
 
 if __name__ == "__training__":
     start = time.time()
-    '''参数输入'''
+    '''Parameter input'''
     models = 'fBm'  # 'fBm', 'fOU', 'rHeston'
     grid_points = 100  # 100, 500, 1000, 1500
     max_epochs = 150
@@ -27,7 +27,7 @@ if __name__ == "__training__":
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print('device:', device)
 
-    '''导入数据集并处理'''
+    '''Import and process dataset'''
     X_train = np.load(f'data/simulated_data/{models}/Xtrain_single_grid={grid_points}.npy')
     Y_train = np.load(f'data/simulated_data/{models}/Ytrain_single_grid={grid_points}.npy')
     X_eval = np.load(f'data/simulated_data/{models}/Xeval_single_grid={grid_points}.npy')
@@ -36,62 +36,62 @@ if __name__ == "__training__":
     train_dataloader, eval_dataloader, example_batch_x, example_batch_y = utils.generate_torch_batched_data(X_train, Y_train, X_eval, Y_eval,
                                                                                                             train_batch_size=64, test_batch_size=64, device=device)
 
-    '''定义训练器'''
+    '''Define trainer'''
     model_trainer = utils.create_model_supervised_trainer(max_epochs=max_epochs, optimizer_fn=optimizer_fn,
                                                           loss_fn=rmse_loss_fn, train_dataloader=train_dataloader,
                                                           eval_dataloader=eval_dataloader, example_batch_x=example_batch_x, lr=lr, device=device)
 
-    '''训练模型'''
+    '''Train models'''
     for round in range(3):
         history={}
-        print('******开始训练Transformer******')
+        print('******Starting Transformer training******')
         transformer = NNmodels.transformer_length(augment_include_original=True, augment_include_time=True, T=1, grid_points=grid_points).to(device)
         model_trainer(transformer, 'Transformer', history)
         torch.save(transformer, f'data/results/numerical_example4/trained_models/{models}/transformer_length{grid_points}_round{round}.pth')
-        print('******Transformer训练完成******')
+        print('******Transformer training complete******')
 
-        print('******开始训练CNN******')
+        print('******Starting CNN training******')
         cnn = NNmodels.cnn_length().to(device)
         model_trainer(cnn, 'CNN', history)
         torch.save(cnn, f'data/results/numerical_example4/trained_models/{models}/cnn_length{grid_points}_round{round}.pth')
-        print('******CNN训练完成******')
+        print('******CNN training complete******')
 
-        print('******开始训练LSTM******')
+        print('******Starting LSTM training******')
         lstm = NNmodels.lstm_length(grid_points=grid_points).to(device)
         model_trainer(lstm, 'LSTM', history)
         torch.save(lstm, f'data/results/numerical_example4/trained_models/{models}/lstm_length{grid_points}_round{round}.pth')
-        print('******LSTM训练完成******')
+        print('******LSTM training complete******')
 
-        print('******开始训练SigMA******')
+        print('******Starting SigMA training******')
         sigma = NNmodels.sigma_length(augment_include_original=True, augment_include_time=True, T=1, stride=int(grid_points/2)).to(device)
         model_trainer(sigma, 'SigMA', history)
         torch.save(sigma, f'data/results/numerical_example4/trained_models/{models}/sigma_length{grid_points}_round{round}.pth')
-        print('******SigMA训练完成******')
+        print('******SigMA training complete******')
 
-        print('******开始训练DeepSigNet******')
+        print('******Starting DeepSigNet training******')
         deepsignet = NNmodels.deepsignet_length(augment_include_original=True, augment_include_time=True, T=1).to(device)
         model_trainer(deepsignet, 'DeepSigNet', history)
         torch.save(deepsignet, f'data/results/numerical_example4/trained_models/{models}/deepsignet_length{grid_points}_round{round}.pth')
-        print('******DeepSigNet训练完成******')
+        print('******DeepSigNet training complete******')
 
         with open(f'data/results/numerical_example4/history/{models}/history_length{grid_points}_round{round}.pkl', 'wb') as f:
             pickle.dump(history, f)
 
     end = time.time()
-    print('---------------总耗时 {:.2f}s---------------'.format(end-start))
+    print('---------------Total time elapsed {:.2f}s---------------'.format(end-start))
 
 if __name__ == '__results__':
-    '''参数输入'''
+    '''Parameter input'''
     models = 'rHeston'  # 'fBm', 'fOU', 'rHeston'
     grid_points = 1500  # 100, 500, 1000, 1500
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    '''导入数据集'''
+    '''Import dataset'''
     history = []
     for round in range(3):
         with open(f'data/results/numerical_example4/history/{models}/history_length{grid_points}_round{round}.pkl', 'rb') as f:
             history.append(pickle.load(f))
-    '''输出训练结果'''
-    '打印表格'
+    '''Output training results'''
+    'Print summary table'
     print(f"{models}_length{grid_points}:")
     params = {}
     transformer = torch.load(f'data/results/numerical_example4/trained_models/{models}/transformer_length{grid_points}_round0.pth', weights_only=False, map_location=device)
@@ -102,7 +102,7 @@ if __name__ == '__results__':
     for i, j in zip(('Transformer', 'SigMA', 'DeepSigNet', 'CNN', 'LSTM'),
                     (transformer, sigma, deepsignet, cnn, lstm)):
         params[i] = utils.count_parameters(j)
-    '各轮表格'
+    'Per-round tables'
     for round in range(3):
         table_data = []
         for key in history[round]:
@@ -110,7 +110,7 @@ if __name__ == '__results__':
         print(f"Round{round}:")
         print(tabulate(table_data, headers=['Model', 'Eval MSE', 'Eval RMSE', '# Parameters'],
                        tablefmt='grid', floatfmt=['', '.3e', '.3e', '']))
-    '平均表格'
+    'Averaged'
     Amse, Armse, C = defaultdict(float), defaultdict(float), defaultdict(int)
     for round in range(3):
         for k, v in history[round].items():
@@ -119,7 +119,7 @@ if __name__ == '__results__':
     print("Average:")
     print(tabulate(Arows, headers=['Model', 'Eval MSE', 'Eval RMSE', '# Parameters'],
                    tablefmt='grid', floatfmt=['','.2e','.2e','']))
-    '''绘制图形'''
+    '''Plot results'''
     def plot_loss_descent(grid_points=None, name=None, history=None):
         colors = np.array([[0.5       , 0.5       , 0.5       , 1.        ],
                            [0.        , 0.64509804, 1.        , 1.        ],
