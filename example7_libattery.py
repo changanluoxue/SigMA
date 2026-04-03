@@ -33,11 +33,11 @@ if __name__ == '__calibration__':
         H, _ = np.polyfit(log_window_sizes, log_RS_values, 1)
         return H
     start = time.time()
-    '''参数输入'''
+    '''Parameter input'''
     models = 'fBm'
     grid_points = 100
     device = torch.device('cpu')
-    '''载入模型'''
+    '''Load models'''
     lstm = NNmodels.lstm_length(grid_points=grid_points)
     sigma = NNmodels.sigma_length(augment_include_original=True, augment_include_time=True, T=1, stride=int(grid_points/2))
     deepsignet = NNmodels.deepsignet_length(augment_include_original=True, augment_include_time=True, T=1)
@@ -50,13 +50,13 @@ if __name__ == '__calibration__':
     transformer.load_state_dict(torch.load(f'data/results/numerical_example7/trained_models/{models}_transformer_length{grid_points}.pth', map_location=torch.device(device))); transformer.eval()
     models = {'lstm': lstm, 'sigma': sigma, 'deepsignet': deepsignet,
               'cnn': cnn, 'transformer': transformer}
-    '''导入47号电池数据'''
+    '''Import Battery #47 data'''
     battery_data=pd.read_csv('data/market_data/Battery_Data_Cleaned.csv')
     battery_data = battery_data[battery_data.battery_id==5]
     battery_capacity = battery_data.Capacity
-    battery_capacity = battery_capacity[battery_capacity != 0] #过滤掉battery_capacity中值为0的异常值
+    battery_capacity = battery_capacity[battery_capacity != 0] # Filter out abnormal zero values in battery_capacity
     battery_capacity = (battery_capacity/np.max(battery_capacity))[1:] #归一化
-    '''绘制电池寿命图像'''
+    '''Plot battery degradation curve'''
     plt.figure(figsize=(10, 6))
     plt.plot(battery_capacity.values, linewidth=3)
     plt.xlabel("Cycles", fontsize=16, fontweight='bold')
@@ -64,10 +64,10 @@ if __name__ == '__calibration__':
     plt.xticks(fontsize=15)
     plt.yticks(ticks=[0.8, 0.85, 0.9, 0.95, 1.0], labels=['80', '85', '90', '95', '100'], fontsize=15)
     plt.savefig('data/results/numerical_example7/plots/battery_degradation.eps')
-    '''估计Hurst指数'''
+    '''Estimate Hurst parameter'''
     RS_H = []; Higuchi_H = []
     model_predictions = {model_name: [] for model_name in models.keys()}
-    for t in range(0,451,10):#[0,10,..,450]一共46次循环，代表[50,60,...,500]轮电池效率
+    for t in range(0,451,10):# 46 iterations in total [0, 10, ..., 450], representing battery capacity over cycles [50, 60, ..., 500]
         battery_capacity_series = battery_capacity.iloc[t:(100+t)]
         rs_h = RS_hurst(battery_capacity_series)
         higuchi_h = 2-ant.higuchi_fd(battery_capacity_series, kmax=10) # Hurst = 2-FHD
@@ -76,7 +76,7 @@ if __name__ == '__calibration__':
             model_pred = model(torch.tensor(battery_capacity_series.values, dtype=torch.float).unsqueeze(0).unsqueeze(0))
             model_pred = np.float64(model_pred.item())
             model_predictions[model_name].append(model_pred)
-    '''绘制Hurst指数估计图表'''
+    '''Generate Hurst parameter estimation table'''
     table_data = []
     table_data.append(['R/S Method', np.mean(RS_H), sms.DescrStatsW(RS_H).tconfint_mean(alpha=1-0.95)])
     table_data.append(['Higuchi Method', np.mean(Higuchi_H), sms.DescrStatsW(Higuchi_H).tconfint_mean(alpha=1-0.95)])
@@ -85,7 +85,7 @@ if __name__ == '__calibration__':
                            sms.DescrStatsW(model_predictions[model_name]).tconfint_mean(alpha=1-0.95)])
     print(tabulate(table_data, headers=['Model', 'H-estimate', '95% confidence intervals'],
                    tablefmt='grid', floatfmt=['', '.3e', '.3e']))
-    '''绘制Hurst指数估计图像'''
+    '''Plot Hurst parameter estimation results'''
     markers = ['v','^','*','+','|']
     linestyles = ['dashdot', 'dotted', (0,(1,10)), (0,(5,10)), (0,(3,1,1,1))]
     plt.figure(figsize=(20, 10))
